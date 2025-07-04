@@ -49,12 +49,12 @@ def next_bytes(rng: mt, length: int) -> bytearray:
     return buf
 
 if __name__ == "__main__":
-    filename = input("input fileName")
+    filename = input("input fileName: ")
     seed = calculate_xxhash(filename.encode("utf-8"))
     rng = mt(seed)
     buf = next_bytes(rng, 15)
     password = base64.b64encode(buf).decode("utf-8")
 
-    print("xxhash32 seed:", seed)
-    print("next_buf:", list(buf))
+    # print("xxhash32 seed:", seed)
+    # print("next_buf:", list(buf))
     print("Password:", password)
