@@ -17,8 +17,7 @@ IGNORE_FILES = {"BundleRevision"}
 FOLDERS = [
     "Audio/BGM",
     "Audio/Videos",
-    "PUB/Resource/GameData/MediaResources",
-    "PUB/Resource/GameData/TableBundles",
+    "PUB/Resource/GameData",
     "PUB/Resource/Preload",
     "Video",
 ]
@@ -47,8 +46,14 @@ def extract_zip(zip_path: Path, dest_dir: Path):
                 print(f"Decrypt：{zip_path.relative_to(BASE)}")
                 count_decrypted += 1
     except Exception as e:
-        print(f"Failed：{zip_path.relative_to(BASE)} -> {e}")
-        count_failed += 1
+        try:
+            password = decrypt(zip_path.name.lower())
+            zip.extractall(dest_dir, pwd=password.encode())
+            print(f"Decrypt：{zip_path.relative_to(BASE)}")
+            count_decrypted += 1
+        except:
+            print(f"Failed：{zip_path.relative_to(BASE)} -> {e}")
+            count_failed += 1
 
 
 def extract_bundle(bundle_path: Path, output_dir: Path):
@@ -56,14 +61,7 @@ def extract_bundle(bundle_path: Path, output_dir: Path):
     try:
         output_dir.mkdir(parents=True, exist_ok=True)
         subprocess.run(
-            [
-                str(ASSETSTUDIO_CLI),
-                str(bundle_path),
-                "-o",
-                str(output_dir),
-                "-t",
-                "all",
-            ],
+            [str(ASSETSTUDIO_CLI), str(bundle_path), "-o", str(output_dir)],
             check=True,
         )
         print(f"Bundle：{bundle_path.relative_to(BASE)}")
