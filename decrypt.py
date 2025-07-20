@@ -56,6 +56,7 @@ def next_bytes(rng: mt, length: int) -> bytearray:
 
 def decrypt(filename: str) -> str:
     print(filename)
+    filename = filename.lower()
     seed = calculate_xxhash(filename.encode("utf-8"))
     rng = mt(seed)
     buf = next_bytes(rng, 15)
